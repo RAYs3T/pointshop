@@ -11,13 +11,15 @@
 		Then configure your MySQL details below and import the following tables into your database:
 
         DROP TABLE IF EXISTS `pointshop_data`;
-        CREATE TABLE `pointshop_data` (
-         `uniqueid` varchar(30) NOT NULL,
-		 `steamId` bigint NOT NULL,
-         `points` int(32) NOT NULL,
-         `items` text NOT NULL,
-         PRIMARY KEY (`uniqueid`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+		CREATE TABLE pointshop_data (
+			uniqueid BIGINT(20) NOT NULL,
+			steamId BIGINT(20) NOT NULL,
+			points INT(32) NOT NULL,
+			items TEXT NOT NULL,
+			PRIMARY KEY (uniqueid),
+			UNIQUE INDEX UK_pointshop_data_steamId (steamId)
+		)
+		ENGINE = INNODB;
 		
 		MAKE SURE YOU ALLOW REMOTE ACCESS TO YOUR DATABASE FROM YOUR GMOD SERVERS IP ADDRESS.
 		
