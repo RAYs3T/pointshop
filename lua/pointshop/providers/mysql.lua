@@ -120,12 +120,12 @@ end
 
 function PROVIDER:GivePoints(ply, points)
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, points, items)
-    VALUES ('%s', '%s', '[]')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
+    VALUES ('%s', '%s', '%s', '[]')
     ON DUPLICATE KEY UPDATE 
         points = points + VALUES(points)
     ]]
-    qs = string.format(qs, ply:UniqueID(), points or 0)
+    qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), points or 0)
     local q = db:query(qs)
      
     function q:onError(err, sql)
@@ -146,12 +146,12 @@ end
 
 function PROVIDER:TakePoints(ply, points)
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, points, items)
-    VALUES ('%s', '%s', '[]')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
+    VALUES ('%s', '%s', '%s', '[]')
     ON DUPLICATE KEY UPDATE 
         points = points - VALUES(points)
     ]]
-    qs = string.format(qs, ply:UniqueID(), points or 0)
+    qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), points or 0)
     local q = db:query(qs)
      
     function q:onError(err, sql)
@@ -179,12 +179,12 @@ function PROVIDER:GiveItem(ply, item_id, data)
     tmp[item_id] = data
 
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, points, items)
-    VALUES ('%s', '0', '%s')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
+    VALUES ('%s', '%s', '0', '%s')
     ON DUPLICATE KEY UPDATE 
         items = VALUES(items)
     ]]
-    qs = string.format(qs, ply:UniqueID(), db:escape(util.TableToJSON(tmp)))
+    qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), db:escape(util.TableToJSON(tmp)))
     local q = db:query(qs)
      
     function q:onError(err, sql)
@@ -208,12 +208,12 @@ function PROVIDER:TakeItem(ply, item_id)
     tmp[item_id] = nil
 
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, points, items)
-    VALUES ('%s', '0', '%s')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
+    VALUES ('%s', '%s', '0', '%s')
     ON DUPLICATE KEY UPDATE 
         items = VALUES(items)
     ]]
-    qs = string.format(qs, ply:UniqueID(), db:escape(util.TableToJSON(tmp)))
+    qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), db:escape(util.TableToJSON(tmp)))
     local q = db:query(qs)
      
     function q:onError(err, sql)
@@ -234,13 +234,13 @@ end
  
 function PROVIDER:SetData(ply, points, items)
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, points, items)
-    VALUES ('%s', '%s', '%s')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
+    VALUES ('%s', '%s', '%s', '%s')
     ON DUPLICATE KEY UPDATE 
         points = VALUES(points),
         items = VALUES(items)
     ]]
-    qs = string.format(qs, ply:UniqueID(), points or 0, db:escape(util.TableToJSON(items)))
+    qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), points or 0, db:escape(util.TableToJSON(items)))
     local q = db:query(qs)
      
     function q:onError(err, sql)
