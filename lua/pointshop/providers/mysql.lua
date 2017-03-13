@@ -13,6 +13,7 @@
         DROP TABLE IF EXISTS `pointshop_data`;
         CREATE TABLE `pointshop_data` (
          `uniqueid` varchar(30) NOT NULL,
+		 `steamId` bigint NOT NULL,
          `points` int(32) NOT NULL,
          `items` text NOT NULL,
          PRIMARY KEY (`uniqueid`)
@@ -93,12 +94,12 @@ end
 
 function PROVIDER:SetPoints(ply, points)
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, points, items)
-    VALUES ('%s', '%s', '[]')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
+    VALUES ('%s', '%s', '%s', '[]')
     ON DUPLICATE KEY UPDATE 
         points = VALUES(points)
     ]]
-    qs = string.format(qs, ply:UniqueID(), points or 0)
+    qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), points or 0)
     local q = db:query(qs)
      
     function q:onError(err, sql)
