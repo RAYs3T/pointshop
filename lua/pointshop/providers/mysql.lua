@@ -16,6 +16,7 @@
 			steamId BIGINT(20) NOT NULL,
 			points INT(32) NOT NULL,
 			items TEXT NOT NULL,
+			lastFunc VARCHAR(255) DEFAULT NULL,
 			PRIMARY KEY (uniqueid),
 			UNIQUE INDEX UK_pointshop_data_steamId (steamId)
 		)
@@ -96,8 +97,8 @@ end
 
 function PROVIDER:SetPoints(ply, points)
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
-    VALUES ('%s', '%s', '%s', '[]')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items, lastFunc)
+    VALUES ('%s', '%s', '%s', '[]', null)
     ON DUPLICATE KEY UPDATE 
         points = VALUES(points)
     ]]
@@ -122,8 +123,8 @@ end
 
 function PROVIDER:GivePoints(ply, points)
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
-    VALUES ('%s', '%s', '%s', '[]')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items, lastFunc)
+    VALUES ('%s', '%s', '%s', '[]', null)
     ON DUPLICATE KEY UPDATE 
         points = points + VALUES(points)
     ]]
@@ -148,8 +149,8 @@ end
 
 function PROVIDER:TakePoints(ply, points)
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
-    VALUES ('%s', '%s', '%s', '[]')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items, lastFunc)
+    VALUES ('%s', '%s', '%s', '[]', null)
     ON DUPLICATE KEY UPDATE 
         points = points - VALUES(points)
     ]]
@@ -181,8 +182,8 @@ function PROVIDER:GiveItem(ply, item_id, data)
     tmp[item_id] = data
 
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
-    VALUES ('%s', '%s', '0', '%s')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items, lastFunc)
+    VALUES ('%s', '%s', '0', '%s', null)
     ON DUPLICATE KEY UPDATE 
         items = VALUES(items)
     ]]
@@ -210,8 +211,8 @@ function PROVIDER:TakeItem(ply, item_id)
     tmp[item_id] = nil
 
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
-    VALUES ('%s', '%s', '0', '%s')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items, lastFunc)
+    VALUES ('%s', '%s', '0', '%s', null)
     ON DUPLICATE KEY UPDATE 
         items = VALUES(items)
     ]]
@@ -236,8 +237,8 @@ end
  
 function PROVIDER:SetData(ply, points, items)
     local qs = [[
-    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items)
-    VALUES ('%s', '%s', '%s', '%s')
+    INSERT INTO `pointshop_data` (uniqueid, steamId, points, items, lastFunc)
+    VALUES ('%s', '%s', '%s', '%s', null)
     ON DUPLICATE KEY UPDATE 
         points = VALUES(points),
         items = VALUES(items)
