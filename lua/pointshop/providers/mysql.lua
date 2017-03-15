@@ -100,7 +100,8 @@ function PROVIDER:SetPoints(ply, points)
     INSERT INTO `pointshop_data` (uniqueid, steamId, points, items, lastFunc)
     VALUES ('%s', '%s', '%s', '[]', null)
     ON DUPLICATE KEY UPDATE 
-        points = VALUES(points)
+        points = VALUES(points),
+		lastFunc = null
     ]]
     qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), points or 0)
     local q = db:query(qs)
@@ -126,7 +127,8 @@ function PROVIDER:GivePoints(ply, points)
     INSERT INTO `pointshop_data` (uniqueid, steamId, points, items, lastFunc)
     VALUES ('%s', '%s', '%s', '[]', null)
     ON DUPLICATE KEY UPDATE 
-        points = points + VALUES(points)
+        points = points + VALUES(points),
+		lastFunc = null
     ]]
     qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), points or 0)
     local q = db:query(qs)
@@ -152,7 +154,8 @@ function PROVIDER:TakePoints(ply, points)
     INSERT INTO `pointshop_data` (uniqueid, steamId, points, items, lastFunc)
     VALUES ('%s', '%s', '%s', '[]', null)
     ON DUPLICATE KEY UPDATE 
-        points = points - VALUES(points)
+        points = points - VALUES(points),
+		lastFunc = null
     ]]
     qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), points or 0)
     local q = db:query(qs)
@@ -185,7 +188,8 @@ function PROVIDER:GiveItem(ply, item_id, data)
     INSERT INTO `pointshop_data` (uniqueid, steamId, points, items, lastFunc)
     VALUES ('%s', '%s', '0', '%s', null)
     ON DUPLICATE KEY UPDATE 
-        items = VALUES(items)
+        items = VALUES(items),
+		lastFunc = null
     ]]
     qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), db:escape(util.TableToJSON(tmp)))
     local q = db:query(qs)
@@ -214,7 +218,8 @@ function PROVIDER:TakeItem(ply, item_id)
     INSERT INTO `pointshop_data` (uniqueid, steamId, points, items, lastFunc)
     VALUES ('%s', '%s', '0', '%s', null)
     ON DUPLICATE KEY UPDATE 
-        items = VALUES(items)
+        items = VALUES(items),
+		lastFunc = null
     ]]
     qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), db:escape(util.TableToJSON(tmp)))
     local q = db:query(qs)
@@ -241,7 +246,8 @@ function PROVIDER:SetData(ply, points, items)
     VALUES ('%s', '%s', '%s', '%s', null)
     ON DUPLICATE KEY UPDATE 
         points = VALUES(points),
-        items = VALUES(items)
+        items = VALUES(items),
+		lastFunc = null
     ]]
     qs = string.format(qs, ply:UniqueID(), ply:SteamID64(), points or 0, db:escape(util.TableToJSON(items)))
     local q = db:query(qs)
